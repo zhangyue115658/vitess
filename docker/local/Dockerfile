@@ -3,15 +3,20 @@ ARG image="vitess/bootstrap:${bootstrap_version}-common"
 
 FROM "${image}"
 
-RUN apt-get update
+# copy apt sourse list
+COPY  sources.list /etc/apt/sources.list
+#RUN chmod 666 /etc/resolv.conf && echo "nameserver 114.114.114.114" >> /etc/resolv.conf
+COPY  resolv.conf /etc/resolv.conf
+RUN apt-key adv --keyserver keyserver.ubuntu.com  --no-tty --recv-keys 3B4FE6ACC0B21F32
+RUN apt-get update 
 RUN apt-get install -y sudo curl vim jq
 
 # Install dependencies
 COPY docker/lite/install_dependencies.sh /vt/dist/install_dependencies.sh
-RUN /vt/dist/install_dependencies.sh mysql57
+RUN bash /vt/dist/install_dependencies.sh mysql57
 
 COPY docker/local/install_local_dependencies.sh /vt/dist/install_local_dependencies.sh
-RUN /vt/dist/install_local_dependencies.sh
+RUN bash /vt/dist/install_local_dependencies.sh
 RUN echo "source /vt/common/env.sh" >> /etc/bash.bashrc
 
 # Allows some docker builds to disable CGO

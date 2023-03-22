@@ -40,6 +40,7 @@ do_fetch() {
 # Install base packages that are common to all flavors.
 BASE_PACKAGES=(
     bzip2
+    libsensors4
     ca-certificates
     dirmngr
     gnupg
@@ -49,7 +50,7 @@ BASE_PACKAGES=(
     libdbd-mysql-perl
     libwww-perl
     libev4
-    libjemalloc2
+    libjemalloc1
     libtcmalloc-minimal4
     procps
     rsync
@@ -57,12 +58,19 @@ BASE_PACKAGES=(
     sysstat
     wget
     curl
+    libdw1
+    libbabeltrace1
     percona-toolkit
     zstd
 )
 
 apt-get update
-apt-get install -y --no-install-recommends "${BASE_PACKAGES[@]}"
+apt-get install  -y libbz2-1.0=1.0.6-8.1ubuntu0.2 --allow-downgrades
+apt-get install -y perl-base=5.26.1-6ubuntu0.6 --allow-downgrades
+apt-get install -y libelf1=0.170-0.4ubuntu0.1 --allow-downgrades
+
+#apt-get install -y --no-install-recommends "${BASE_PACKAGES[@]}"
+apt-get install -y  "${BASE_PACKAGES[@]}"
 
 # Packages specific to certain flavors.
 case "${FLAVOR}" in
